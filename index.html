@@ -6,128 +6,152 @@
 <title>For You 💜</title>
 
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: #050010;
-    overflow: hidden;
-    font-family: 'Segoe UI', sans-serif;
-  }
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  background: #050010;
+  position: relative;
+}
 
-  canvas {
-    position: absolute;
-    inset: 0;
-  }
+/* Canvas for stars */
+canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
 
-  .scene {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 35%;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    pointer-events: none;
-  }
+/* Card */
+.card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,0.95);
+  padding: 28px;
+  border-radius: 25px;
+  width: 90%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(186,104,200,0.5);
+  z-index: 5;
+}
 
-  svg {
-    width: 300px;
-    height: 200px;
-  }
+h1 {
+  color: #6a1b9a;
+  font-size: 24px;
+  margin: 16px 0;
+}
 
-  .boy {
-    transform: translateX(-70px);
-    transition: transform 1.2s ease;
-  }
+p {
+  color: #7b2cbf;
+  white-space: pre-line;
+  margin: 16px 0;
+}
 
-  .girl {
-    transform: translateX(70px);
-    transition: transform 1.2s ease;
-  }
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
 
-  .closer-1 .boy { transform: translateX(-40px); }
-  .closer-1 .girl { transform: translateX(40px); }
+button {
+  padding: 12px 26px;
+  font-size: 17px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+}
 
-  .closer-2 .boy { transform: translateX(-20px); }
-  .closer-2 .girl { transform: translateX(20px); }
+.yes {
+  background: linear-gradient(135deg, #9d4edd, #ffafcc);
+  color: white;
+}
 
-  .together .boy { transform: translateX(-10px); }
-  .together .girl { transform: translateX(10px); }
+.no {
+  background: #e0aaff;
+  color: #4a148c;
+}
 
-  .heart-center {
-    opacity: 0;
-    transform: scale(0);
-    transition: all 1s ease;
-    transform-origin: center;
-  }
+#noMsg {
+  margin-top: 12px;
+  color: #d6336c;
+  font-size: 15px;
+}
 
-  .together .heart-center {
-    opacity: 1;
-    transform: scale(1);
-  }
+/* Scene (boy & girl silhouettes) */
+.scene {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 35%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  pointer-events: none;
+  z-index: 1;
+}
 
-  .card {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255,255,255,0.95);
-    padding: 28px;
-    border-radius: 25px;
-    width: 90%;
-    max-width: 380px;
-    text-align: center;
-    box-shadow: 0 0 40px rgba(186,104,200,0.5);
-    z-index: 5;
-  }
+.scene svg {
+  width: 300px;
+  height: 200px;
+  overflow: visible;
+}
 
-  h1 {
-    color: #6a1b9a;
-    font-size: 24px;
-  }
+.boy, .girl {
+  transition: transform 1.2s ease;
+}
 
-  p {
-    color: #7b2cbf;
-    white-space: pre-line;
-  }
+.boy { transform: translateX(-70px); }
+.girl { transform: translateX(70px); }
 
-  button {
-    margin: 12px;
-    padding: 12px 26px;
-    font-size: 17px;
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-  }
+.closer-1 .boy { transform: translateX(-40px); }
+.closer-1 .girl { transform: translateX(40px); }
+.closer-2 .boy { transform: translateX(-20px); }
+.closer-2 .girl { transform: translateX(20px); }
+.together .boy { transform: translateX(-10px); }
+.together .girl { transform: translateX(10px); }
 
-  .yes {
-    background: linear-gradient(135deg, #9d4edd, #ffafcc);
-    color: white;
-  }
+.heart-center {
+  opacity: 0;
+  transform: scale(0);
+  transition: 1s ease;
+  transform-origin: center;
+}
+.together .heart-center {
+  opacity: 1;
+  transform: scale(1);
+}
 
-  .no {
-    background: #e0aaff;
-    color: #4a148c;
-  }
-
-  #noMsg {
-    color: #d6336c;
-    font-size: 15px;
-  }
+/* Roses */
+.rose {
+  position: absolute;
+  font-size: 28px;
+  animation: floatUp 3s ease forwards;
+  pointer-events: none;
+}
+@keyframes floatUp {
+  0% { opacity: 0; transform: translateY(30px) scale(0.5); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-120px) scale(1); }
+}
 </style>
 </head>
 
 <body>
 
+<!-- Star canvas -->
 <canvas id="stars"></canvas>
 
-<!-- 🌌 Couple Scene -->
+<!-- Boy & girl scene -->
 <div class="scene" id="scene">
 <svg viewBox="0 0 300 200">
   <!-- Boy -->
   <g class="boy" fill="#111">
     <circle cx="110" cy="90" r="16"/>
-    <path d="M90 85 Q110 60 130 85" /> <!-- hair -->
+    <path d="M90 85 Q110 60 130 85" />
     <rect x="98" y="105" width="24" height="55" rx="10"/>
   </g>
 
@@ -150,82 +174,126 @@
 </svg>
 </div>
 
-<!-- 💌 Card -->
+<!-- Card -->
 <div class="card">
+  <p id="text">Hey Pankhudi! I have something important to ask you.</p>
   <h1 id="title">Will you be my Valentine? 💜</h1>
-  <p id="text">Borahae 💜 I have something important to ask you.</p>
 
-  <button class="yes" id="yesBtn">Yes 💕</button>
-  <button class="no" id="noBtn">No 🙃</button>
+  <div class="buttons" id="buttons">
+    <button class="yes" id="yesBtn">Yes 💕</button>
+    <button class="no" id="noBtn">No 🙃</button>
+  </div>
 
   <div id="noMsg"></div>
 </div>
 
 <script>
-/* ⭐ STARFIELD */
-const c = document.getElementById("stars");
-const ctx = c.getContext("2d");
-function resize(){c.width=innerWidth;c.height=innerHeight;}
-resize(); addEventListener("resize", resize);
+/* Starry sky with shooting stars */
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
 
-const stars = Array.from({length:500},()=>({
-  x:Math.random()*c.width,
-  y:Math.random()*c.height,
-  r:Math.random()*1.5
+function resizeCanvas(){ canvas.width = innerWidth; canvas.height = innerHeight; }
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const stars = Array.from({length:500}, () => ({
+  x: Math.random() * canvas.width,
+  y: Math.random() * canvas.height,
+  r: Math.random()*1.5
 }));
 
 function drawStars(){
-  ctx.clearRect(0,0,c.width,c.height);
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // Moon
+  ctx.beginPath();
+  ctx.arc(canvas.width-100, 100, 50, 0, Math.PI*2);
+  ctx.fillStyle="#fefbd8";
+  ctx.fill();
+
+  // Stars
   ctx.fillStyle="white";
   stars.forEach(s=>{
     ctx.beginPath();
     ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
     ctx.fill();
   });
+
+  // Shooting stars
+  if(Math.random()<0.01){
+    const startX = Math.random()*canvas.width;
+    const startY = Math.random()*canvas.height/2;
+    const len = 100;
+    ctx.beginPath();
+    ctx.moveTo(startX,startY);
+    ctx.lineTo(startX+len,startY+len/5);
+    ctx.strokeStyle="white";
+    ctx.lineWidth=1.2;
+    ctx.stroke();
+  }
+
   requestAnimationFrame(drawStars);
 }
 drawStars();
 
-/* 💜 Logic */
-let step = 0, noClicks = 0;
-const scene = document.getElementById("scene");
+/* Logic */
+let step=0,noClicks=0;
 const title = document.getElementById("title");
 const text = document.getElementById("text");
 const noMsg = document.getElementById("noMsg");
 const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const buttons = document.getElementById("buttons");
+const scene = document.getElementById("scene");
+const boy = scene.querySelector(".boy");
+const girl = scene.querySelector(".girl");
+const heart = scene.querySelector(".heart-center");
+
+function spawnRose(){
+  const rose = document.createElement("div");
+  rose.className = "rose";
+  rose.innerText = "🌹";
+  rose.style.left = Math.random()*90 + "%";
+  rose.style.bottom = "20%";
+  document.body.appendChild(rose);
+  setTimeout(()=>rose.remove(),3000);
+}
+
+let roseInterval;
 
 yesBtn.onclick = () => {
   step++;
   noMsg.innerText = "";
 
+  // move silhouettes
+  if(step===1) scene.classList.add("closer-1");
+  else if(step===2) scene.classList.add("closer-2");
+  else if(step===3) scene.classList.add("together");
+
+  // update text per page
   if(step===1){
-    scene.classList.add("closer-1");
     title.innerText="One more thing 👀💜";
-    text.innerText="Ready for my Nakhra, Cringe & Gussa 😌\nbut also LOTS of Pyaar? 💕";
-  }
-  else if(step===2){
-    scene.classList.add("closer-2");
+    text.innerText="Ready for my Nakhra, Cringe & sometimse lil bit Gussa 😌\nbut mostly LOL\n, LOTS of LOVE? 💕";
+  }else if(step===2){
     title.innerText="Last chance 😳";
     text.innerText="Pakka na? No going back then…\nDekh lo?? 👀💜";
-  }
-  else{
-    scene.classList.add("together");
+  }else{
     title.innerText="Yayyyy 🥰💜";
-    text.innerText="You are already my Valentine bub\non this day and all the days of my life.\n\nI love you. Always.\nSaranghaeyo💜";
-    yesBtn.style.display=noBtn.style.display=noMsg.style.display="none";
+    text.innerText="You are already my Valentine bub\non this day and all the days of my life.\n\nI love you. Always.\nSaranghaeyo💜\nBorahae💜";
+    buttons.style.display="none";
+    heart.style.opacity=1;
+
+    // spawn roses
+    roseInterval = setInterval(spawnRose, 400);
+    setTimeout(()=>clearInterval(roseInterval), 6000);
   }
 };
 
 noBtn.onclick = () => {
   noClicks++;
-  if(noClicks===1)
-    noMsg.innerText="Hawww 😤 Wrong answer. Try again.";
-  else if(noClicks===2)
-    noMsg.innerText="Dekhiye ji 😭 Press YES and CPR my heart 💔, which stopped when you pressed No";
-  else{
-    noMsg.innerText="No is not an option. Hmph! 😤";
-    noBtn.style.display="none";
-  }
+  if(noClicks===1) noMsg.innerText="Hawww 😤 Wrong answer.";
+  else if(noClicks===2) noMsg.innerText="Press YES and CPR my heart 💔\n which stopped when you pressed NO";
+  else { noMsg.innerText="No is not an option now 😤"; noBtn.style.display="none"; }
 };
 </script>
 
